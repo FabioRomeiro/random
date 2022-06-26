@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+yes | tr \\n x | head -c 1048576000 | grep n
