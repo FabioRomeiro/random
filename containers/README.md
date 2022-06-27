@@ -113,3 +113,27 @@ It's possible to limit how much resource a group can get. For example, limit the
 cgset -r cpu.cfs_period_us=100000 -r cpu.cfs_quota_us=$[ 5000 * $(getconf _NPROCESSORS_ONLN) ] sandbox
 cgset -r memory.limit_in_bytes=80M sandbox
 ```
+
+---
+
+A docker container uses cgroup
+
+Docker images are just zip files ¯\_(ツ)_/¯
+
+```bash
+# start a container on background
+docker run --rm -dit --name some-container alpine:3.10 sh
+# export the container to .tar
+docker export -o ./dockercontainer.tar some-container
+mkdir some-container-root
+tar xf dockercontainer.tar -C some-container-root/
+cd some-container-root
+```
+
+```bash
+unshare --mount --uts --ipc --net --pid --fork --user --map-root-user chroot ./ sh
+mount -t proc none /proc
+mount -t sysfs none /sys
+mount -t tmpfs none /tmp
+```
+
